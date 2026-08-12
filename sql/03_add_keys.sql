@@ -20,6 +20,13 @@ MODIFY customer_id VARCHAR(32) NOT NULL,
 ADD PRIMARY KEY (order_id),
 ADD FOREIGN KEY (customer_id)
 	REFERENCES customers(customer_id);
+    
+ALTER TABLE orders
+MODIFY order_purchase_timestamp DATETIME,
+MODIFY order_approved_at DATETIME,
+MODIFY order_delivered_carrier_date DATETIME,
+MODIFY order_estimated_delivery_date DATETIME,
+MODIFY order_delivered_customer_date DATETIME;
 
 
 ## Table -> Order_items
@@ -38,6 +45,9 @@ ADD CONSTRAINT fk_product_item_id
 ADD CONSTRAINT fk_seller_item_id
 	FOREIGN KEY (seller_id)
 	REFERENCES sellers(seller_id);
+    
+ALTER TABLE order_items
+MODIFY shipping_limit_date DATETIME;
 
 ## Table -> Order_payments
 ALTER TABLE order_payments
@@ -53,7 +63,10 @@ ADD CONSTRAINT fk_order_reviews
 	FOREIGN KEY (order_id)
 	REFERENCES orders(order_id);
     
-    
+ALTER TABLE order_reviews
+MODIFY review_creation_date DATETIME,
+MODIFY review_answer_timestamp DATETIME;
+
 ## TABLE -> Prodcuts
 ALTER TABLE products
 MODIFY product_id VARCHAR(32) NOT NULL,
@@ -88,6 +101,9 @@ SELECT
         geolocation_state
     )) AS unique_combinations
 FROM geolocation;
+
+
+
 
 
 
