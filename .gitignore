@@ -1,0 +1,14 @@
+# Raw datasets
+data/raw/*.csv
+
+# MySQL dumps / databases
+*.sql.gz
+*.dump
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
