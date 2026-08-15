@@ -168,7 +168,7 @@ LIMIT 10;
 
 SELECT 
     product_category_name_english,
-    ROUND(SUM(price) / COUNT(p.product_id), 4) AS sales_per_product
+    ROUND(SUM(price) / COUNT(DISTINCT p.product_id), 4) AS sales_per_product
 FROM
     products p
         JOIN
