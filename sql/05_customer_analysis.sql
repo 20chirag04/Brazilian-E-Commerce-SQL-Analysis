@@ -62,7 +62,7 @@ SELECT
 		COUNT(*) * 100.0) as percentage_repeated_customers
 from customer_orders;
 
--- Which states have the most orders? → requires customers + orders
+-- Which states have the most orders? 
 
 SELECT customer_state,
 	COUNT(distinct o.order_id) AS number_of_orders
