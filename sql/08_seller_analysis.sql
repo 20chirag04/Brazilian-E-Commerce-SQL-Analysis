@@ -1,106 +1,139 @@
 -- How many sellers are there in total?
-SELECT COUNT(DISTINCT seller_id)
-FROM sellers;
+SELECT 
+    COUNT(DISTINCT seller_id)
+FROM
+    sellers;
 
 -- Which states have the most sellers?
-select seller_state,COUNT(DISTINCT seller_id) as num_sellers
-from sellers 
+SELECT 
+    seller_state, COUNT(DISTINCT seller_id) AS num_sellers
+FROM
+    sellers
 GROUP BY seller_state
-order by num_sellers desc
-limit 10;
+ORDER BY num_sellers DESC
+LIMIT 10;
 
 -- Which cities have the most sellers?
-select seller_city,COUNT(DISTINCT seller_id) as num_sellers
-from sellers 
+SELECT 
+    seller_city, COUNT(DISTINCT seller_id) AS num_sellers
+FROM
+    sellers
 GROUP BY seller_city
-order by num_sellers desc
-limit 10;
+ORDER BY num_sellers DESC
+LIMIT 10;
 
 -- How many sellers are there in each state?
-select seller_state,COUNT(DISTINCT seller_id) as num_sellers
-from sellers 
+SELECT 
+    seller_state, COUNT(DISTINCT seller_id) AS num_sellers
+FROM
+    sellers
 GROUP BY seller_state
-order by num_sellers desc;
+ORDER BY num_sellers DESC;
 
 -- Which 10 sellers generate the highest total sales?
-select seller_id ,round(sum(price),2) as total_sales
-from order_items
-group by seller_id
-order by total_sales desc
-limit 10
+SELECT 
+    seller_id, ROUND(SUM(price), 2) AS total_sales
+FROM
+    order_items
+GROUP BY seller_id
+ORDER BY total_sales DESC
+LIMIT 10
 ;
 
 -- Which 10 sellers sell the most items?
-select seller_id ,count(*) as items
-from order_items
-group by seller_id
-order by items desc
-limit 10
+SELECT 
+    seller_id, COUNT(*) AS items
+FROM
+    order_items
+GROUP BY seller_id
+ORDER BY items DESC
+LIMIT 10
 ;
 
 -- Which 10 sellers have the highest average product price?
-select seller_id ,round(avg(price),2) as avg_sales
-from order_items
-group by seller_id
-order by avg_sales desc
-limit 10
+SELECT 
+    seller_id, ROUND(AVG(price), 2) AS avg_sales
+FROM
+    order_items
+GROUP BY seller_id
+ORDER BY avg_sales DESC
+LIMIT 10
 ;
 
 -- Which 10 sellers have the highest total freight cost?
-select seller_id ,round(sum(freight_value),2) as total_freight_value
-from order_items
-group by seller_id
-order by total_freight_value desc
-limit 10
+SELECT 
+    seller_id,
+    ROUND(SUM(freight_value), 2) AS total_freight_value
+FROM
+    order_items
+GROUP BY seller_id
+ORDER BY total_freight_value DESC
+LIMIT 10
 ;
 
 -- Which 10 sellers have the highest average freight cost?
-select seller_id ,round(avg(freight_value),2) as avg_freight_value
-from order_items
-group by seller_id
-order by avg_freight_value desc
-limit 10
+SELECT 
+    seller_id, ROUND(AVG(freight_value), 2) AS avg_freight_value
+FROM
+    order_items
+GROUP BY seller_id
+ORDER BY avg_freight_value DESC
+LIMIT 10
 ;
 
 -- Which 10 sellers have the highest number of orders?
-select seller_id ,count(distinct order_id) as num_orders
-from order_items
-group by seller_id
-order by num_orders desc
-limit 10
+SELECT 
+    seller_id, COUNT(DISTINCT order_id) AS num_orders
+FROM
+    order_items
+GROUP BY seller_id
+ORDER BY num_orders DESC
+LIMIT 10
 ;
 
 -- What is the average number of items sold per seller?
-select round(count(*)/count(distinct seller_id),2) as num_orders
-from order_items
+SELECT 
+    ROUND(COUNT(*) / COUNT(DISTINCT seller_id), 2) AS num_orders
+FROM
+    order_items
 ;
 
 -- Which sellers have the highest average review score?
-select seller_id, COUNT(DISTINCT review_id) AS num_reviews
-	,round(avg(review_score),2) as avg_review_score
-from order_items oi
-join order_reviews orw on oi.order_id = orw.order_id
-group by seller_id
+SELECT 
+    seller_id,
+    COUNT(DISTINCT review_id) AS num_reviews,
+    ROUND(AVG(review_score), 2) AS avg_review_score
+FROM
+    order_items oi
+        JOIN
+    order_reviews orw ON oi.order_id = orw.order_id
+GROUP BY seller_id
 HAVING COUNT(DISTINCT review_id) >= 10
-order by avg_review_score desc;
+ORDER BY avg_review_score DESC;
 
 -- Which states generate the highest seller sales?
-select seller_state,round(SUM(price),2) as total_value
-from sellers s
-join order_items oi on s.seller_id = oi.seller_id
-group by seller_state
-order by total_value DESC;
+SELECT 
+    seller_state, ROUND(SUM(price), 2) AS total_value
+FROM
+    sellers s
+        JOIN
+    order_items oi ON s.seller_id = oi.seller_id
+GROUP BY seller_state
+ORDER BY total_value DESC;
 
 -- Which sellers have both high sales and high review scores?
-select seller_id,
-	round(avg(review_score),2) as avg_review_score,
-    round(sum(price),2) as sales
-from order_items oi
-join order_reviews orw on oi.order_id = orw.order_id
-group by seller_id
+SELECT 
+    seller_id,
+    ROUND(AVG(review_score), 2) AS avg_review_score,
+    ROUND(SUM(price), 2) AS sales
+FROM
+    order_items oi
+        JOIN
+    order_reviews orw ON oi.order_id = orw.order_id
+GROUP BY seller_id
 HAVING COUNT(DISTINCT review_id) >= 10
-	AND AVG(review_score) >= 4
-order by avg_review_score desc,sales desc;
+    AND AVG(review_score) >= 4
+ORDER BY avg_review_score DESC , sales DESC;
 
 -- What percentage of total sales is generated by the top 10 sellers?
 with total_sale as (
